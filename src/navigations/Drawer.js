@@ -7,7 +7,7 @@ const Drawer = createDrawerNavigator();
 function DrawerStack() {
   return (
     <Drawer.Navigator>
-      <Drawer.Screen name="Home" component={Scheduled} />
+      <Drawer.Screen name="Home" component={StackHome} />
     </Drawer.Navigator>
   );
 }

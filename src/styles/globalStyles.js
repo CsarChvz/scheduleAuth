@@ -7,4 +7,9 @@ export const globalStyles = StyleSheet.create({
     alignContent: "center",
     padding: 24,
   },
+  titleText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#333",
+  },
 });
