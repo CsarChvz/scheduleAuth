@@ -7,7 +7,11 @@ const HomeStack = createNativeStackNavigator();
 
 export default function StackHome() {
   return (
-    <HomeStack.Navigator>
+    <HomeStack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
       <HomeStack.Screen name="Scheduled" component={Scheduled} />
     </HomeStack.Navigator>
   );
