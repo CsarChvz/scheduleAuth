@@ -9,8 +9,21 @@ function SignUp() {
   return (
     <View style={globalStyles.container}>
       <Text>SignUp</Text>
-      <MyInput label="Email" />
-      <MyInput label="Password" secureTextEntry={true} />
+      <View style={styles.container}>
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          value={token}
+          onChangeText={(text) => setToken(text)}
+        />
+      </View>
+      <View style={styles.container}>
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          secureTextEntry={true}
+        />
+      </View>
       <MyButton label="Sign Up" />
       <MyButton
         label="Login"
