@@ -2,6 +2,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { View, Text } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import Scheduled from "../screens/Scheduled";
+import Profile from "../screens/Profile";
 
 const HomeStack = createNativeStackNavigator();
 

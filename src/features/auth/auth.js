@@ -1,13 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-// possible auth states
-// 'signedIn'
-// 'signUp'
-// 'signOut'
-// 'confirmSignUp'
-// 'forgotPassword'
-// 'confirmForgotPassword',
-
 const initialState = {
   authState: "signIn",
   userToken: null,

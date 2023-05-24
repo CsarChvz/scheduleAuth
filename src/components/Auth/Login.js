@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { globalStyles } from "../../styles/globalStyles";
 import { useNavigation } from "@react-navigation/native";
-import MyInput from "../../components/MyInput";
-import MyButton from "../../components/MyButton";
+import MyInput from "../MyInput";
+import MyButton from "../MyButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch } from "react-redux";
-import { signIn } from "../../features/auth/auth";
+import { setAuthState, signIn } from "../../features/auth/auth";
 import { TextInput } from "react-native";
 
 function Login() {
@@ -50,7 +50,7 @@ function Login() {
       <MyButton
         label="SignUp"
         onPress={() => {
-          navigation.navigate("SignUp");
+          dispatch(setAuthState("signUp"));
         }}
       />
     </View>
@@ -69,5 +69,5 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
 });
-  
+
 export default Login;

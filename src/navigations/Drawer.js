@@ -1,6 +1,7 @@
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import StackHome from "./Home";
 import { View } from "react-native";
+import Profile from "../screens/Profile";
 
 const Drawer = createDrawerNavigator();
 
@@ -22,6 +23,7 @@ function DrawerStack() {
   return (
     <Drawer.Navigator>
       <Drawer.Screen name="Home" component={StackHome} />
+      <Drawer.Screen name="Profile" component={Profile} />
     </Drawer.Navigator>
   );
 }
