@@ -30,7 +30,12 @@ function SignUp({ onSignUp, setEmail, setPassword }) {
           secureTextEntry={true}
         />
       </View>
-      <MyButton label="Sign Up" onPress={onSignUp} />
+      <MyButton
+        label="Sign Up"
+        onPress={() => {
+          onSignUp();
+        }}
+      />
       <MyButton
         label="Login"
         onPress={() => {

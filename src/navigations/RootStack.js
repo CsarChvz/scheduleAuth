@@ -7,10 +7,26 @@ import { useEffect, useState } from "react";
 import Splash from "../screens/Splash";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../firebaseConfig";
+
 export default function RootNavigator() {
   const user = useSelector((state) => state.auth);
   const [token, setToken] = useState("");
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        dispatch(restoreToken(user.uid));
+      } else {
+        console.log("Si");
+      }
+    });
+
+    return unsubscribeAuth;
+  }, []);
+
   useEffect(() => {
     getValue();
   }, []);
