@@ -9,16 +9,14 @@ import { useDispatch } from "react-redux";
 import { setAuthState, signIn } from "../../features/auth/auth";
 import { TextInput } from "react-native";
 
-function Login() {
+function Login({ onLogin, setEmail, setPassword }) {
   const navigation = useNavigation();
   const [token, setToken] = useState("");
   const dispatch = useDispatch();
 
   async function save(value) {
     try {
-      await AsyncStorage.setItem("@token", value);
       dispatch(signIn(value));
-      console.log("token saved");
     } catch (error) {
       console.log(error);
     }
@@ -30,21 +28,24 @@ function Login() {
         <TextInput
           style={styles.input}
           placeholder="Email"
-          value={token}
-          onChangeText={(text) => setToken(text)}
+          onChangeText={(text) => setEmail(text)}
         />
       </View>
       <View style={styles.container}>
         <TextInput
           style={styles.input}
           placeholder="Password"
+          onChangeText={(text) => {
+            setPassword(text);
+          }}
           secureTextEntry={true}
         />
       </View>
       <MyButton
         label="Login"
         onPress={() => {
-          save(token);
+          // onLogin();
+          save("sdasdasd");
         }}
       />
       <MyButton

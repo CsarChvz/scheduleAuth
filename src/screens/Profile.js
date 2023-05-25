@@ -5,6 +5,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch } from "react-redux";
 import { signOut } from "../features/auth/auth";
 
+import { signOut as SignOutFirebase } from "firebase/auth";
+import { auth } from "../firebaseConfig";
+
 function Profile() {
   const dispatch = useDispatch();
   return (
@@ -12,8 +15,9 @@ function Profile() {
       <Button
         title="Sign out"
         onPress={async () => {
-          dispatch(signOut());
+          await SignOutFirebase(auth);
           await AsyncStorage.removeItem("@token");
+          dispatch(signOut());
         }}
       />
     </View>

@@ -6,6 +6,8 @@ import { Calendar, LocaleConfig } from "react-native-calendars";
 import {
   BottomSheetModal,
   BottomSheetModalProvider,
+  BottomSheetFlatList,
+  BottomSheetScrollView,
 } from "@gorhom/bottom-sheet";
 
 function Scheduled() {
@@ -29,6 +31,21 @@ function Scheduled() {
     bottomSheetModalRef.current?.close();
   }, []);
 
+  const data = useMemo(
+    () =>
+      Array(50)
+        .fill(0)
+        .map((_, index) => `index-${index}`),
+    []
+  );
+  const renderItem = useCallback(
+    (item) => (
+      <View key={item} style={styles.itemContainer}>
+        <Text>{item}</Text>
+      </View>
+    ),
+    []
+  );
   return (
     <View style={globalStyles.container}>
       <BottomSheetModalProvider>
@@ -53,10 +70,12 @@ function Scheduled() {
             snapPoints={snapPoints}
             onChange={handleSheetChanges}
           >
-            <View style={styles.contentContainer}>
-              <Text>Awesome 🎉</Text>
-              <Button onPress={handleClosePress} title="Close" />
-            </View>
+            <Button onPress={handleClosePress} title="Close" />
+            <BottomSheetScrollView
+              contentContainerStyle={styles.contentContainer}
+            >
+              {data.map(renderItem)}
+            </BottomSheetScrollView>
           </BottomSheetModal>
         </View>
       </BottomSheetModalProvider>
@@ -71,8 +90,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   contentContainer: {
-    flex: 1,
-    alignItems: "center",
+    backgroundColor: "white",
+  },
+  itemContainer: {
+    padding: 6,
+    margin: 6,
+    backgroundColor: "#eee",
   },
 });
 export default Scheduled;

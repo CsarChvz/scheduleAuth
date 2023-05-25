@@ -7,7 +7,6 @@ import { auth } from "../firebaseConfig";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  signOut,
 } from "firebase/auth";
 
 export default function Auth() {
@@ -19,8 +18,9 @@ export default function Auth() {
   const onLogin = async (email, password) => {
     if (email !== "" && password !== "") {
       signInWithEmailAndPassword(auth, email, password).then(
-        (userCredential) => {
+        async (userCredential) => {
           const user = userCredential.user;
+          await AsyncStorage.setItem("@token", user.uid);
           alert("Login success");
           dispatch(setAuthState("signedIn"));
         }
@@ -36,7 +36,6 @@ export default function Auth() {
           console.log(user);
           alert("Sign up success");
           dispatch(setAuthState("signedIn"));
-
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -46,16 +45,13 @@ export default function Auth() {
     }
   };
 
-  const onSignOut = async () => {
-    signOut(auth).then(() => {
-      alert("Sign out success");
-    });
-  };
   return (
     <>
       {authState === "signIn" && (
         <Login
-          onLogin={onLogin}
+          onLogin={() => {
+            onLogin(email, password);
+          }}
           setEmail={setEmail}
           setPassword={setPassword}
         />
