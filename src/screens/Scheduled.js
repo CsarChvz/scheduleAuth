@@ -13,7 +13,7 @@ import {
 function Scheduled() {
   const navigation = useNavigation();
   const [selected, setSelected] = React.useState("");
-
+  const [dateSelected, setDateSelected] = React.useState();
   const bottomSheetModalRef = useRef(null);
 
   // variables
@@ -33,7 +33,7 @@ function Scheduled() {
 
   const data = useMemo(
     () =>
-      Array(50)
+      Array(48)
         .fill(0)
         .map((_, index) => `index-${index}`),
     []
@@ -53,6 +53,7 @@ function Scheduled() {
           onDayPress={(day) => {
             setSelected(day.dateString);
             handlePresentModalPress();
+            setDateSelected(new Date(day.dateString));
           }}
           markedDates={{
             [selected]: {
@@ -71,6 +72,7 @@ function Scheduled() {
             onChange={handleSheetChanges}
           >
             <Button onPress={handleClosePress} title="Close" />
+            <Text>{JSON.stringify(dateSelected)}</Text>
             <BottomSheetScrollView
               contentContainerStyle={styles.contentContainer}
             >

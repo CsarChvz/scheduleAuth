@@ -17,6 +17,7 @@ function Login({ onLogin, setEmail, setPassword }) {
   async function save(value) {
     try {
       dispatch(signIn(value));
+      await AsyncStorage.setItem("@token", value);
     } catch (error) {
       console.log(error);
     }
