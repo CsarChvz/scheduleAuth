@@ -24,7 +24,7 @@ function Scheduled() {
   const [dateSelected, setDateSelected] = React.useState();
   const [datos, setdatos] = useState([]);
   const bottomSheetModalRef = useRef(null);
-  const { newSlots } = useSelector((state) => state.schedule);
+  const { newSlots, removeSlots } = useSelector((state) => state.schedule);
   const dispatch = useDispatch();
   // variables
   const snapPoints = useMemo(() => ["25%", "75%"], []);
@@ -77,7 +77,10 @@ function Scheduled() {
         onPress={() => {
           if (!newSlots.some((slot) => slot.timestamp === item.timestamp)) {
             dispatch(addNewSlot(item));
-          } else {
+          } else if (
+            !removeSlots.some((slot) => slot.timestamp === item.timestamp)
+          ) {
+            console.log("remove");
             dispatch(removeActiveSlote(item));
           }
         }}
@@ -91,7 +94,7 @@ function Scheduled() {
         </Text>
       </TouchableOpacity>
     ),
-    [newSlots] // agregar newSlots como dependencia
+    [newSlots, removeSlots] // agregar newSlots como dependencia
   );
 
   return (

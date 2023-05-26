@@ -20,7 +20,8 @@ const scheduleSlice = createSlice({
       }
     },
     removeActiveSlote: (state, action) => {
-      // Tenermos que checar si el elemento que queremos eliminar esta en el array de newSlots
+      // Se tiene que checar si no esta en newSlots, si es que esta entonces se tiene que eliminar de ahí y de lo contrario se agrega a removeSlots
+
       if (state.newSlots.some((item) => item === action.payload)) {
         state.newSlots = state.newSlots.filter(
           (item) => item !== action.payload
