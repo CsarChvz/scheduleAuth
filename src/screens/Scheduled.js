@@ -15,7 +15,9 @@ import {
   BottomSheetScrollView,
 } from "@gorhom/bottom-sheet";
 import { useDispatch, useSelector } from "react-redux";
-import { addNewSlot } from "../features/schedules/schedules";
+import { addNewSlot, removeActiveSlote } from "../features/schedules/schedules";
+
+import Ionicons from "@expo/vector-icons/Ionicons";
 function Scheduled() {
   const navigation = useNavigation();
   const [selected, setSelected] = React.useState("");
@@ -76,17 +78,16 @@ function Scheduled() {
           if (!newSlots.some((slot) => slot.timestamp === item.timestamp)) {
             dispatch(addNewSlot(item));
           } else {
-            console.log("El objeto ya existe en el array.");
-            // Aquí puedes manejar lo que ocurre si el objeto ya está en el array
+            dispatch(removeActiveSlote(item));
           }
         }}
       >
         <Text>{item.label}</Text>
         <Text>{item.timestamp}</Text>
         <Text>
-          {newSlots.some((slot) => slot.timestamp === item.timestamp)
-            ? "true"
-            : "false"}
+          {newSlots.some((slot) => slot.timestamp === item.timestamp) ? (
+            <Ionicons name="md-checkmark-circle" size={32} color="green" />
+          ) : null}
         </Text>
       </TouchableOpacity>
     ),

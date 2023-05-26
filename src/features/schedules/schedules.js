@@ -10,16 +10,24 @@ const scheduleSlice = createSlice({
   initialState,
   reducers: {
     addNewSlot: (state, action) => {
-      if (state.newSlots.length > 0) {
+      // Tenemos que checar si el elemento que queremos agregar ya esta en el array de removeSlots para eliminarlo de ahi y si no se repite lo agregamos
+      if (state.removeSlots.some((item) => item === action.payload)) {
+        state.removeSlots = state.removeSlots.filter(
+          (item) => item !== action.payload
+        );
+      } else {
+        state.newSlots = [...state.newSlots, action.payload];
+      }
+    },
+    removeActiveSlote: (state, action) => {
+      // Tenermos que checar si el elemento que queremos eliminar esta en el array de newSlots
+      if (state.newSlots.some((item) => item === action.payload)) {
         state.newSlots = state.newSlots.filter(
           (item) => item !== action.payload
         );
+      } else {
+        state.removeSlots = [...state.removeSlots, action.payload];
       }
-      state.newSlots = [...state.newSlots, action.payload];
-      console.log(state.newSlots);
-    },
-    removeActiveSlote: (state, action) => {
-      state.removeSlots = [...state.removeSlots, action.payload];
     },
     setSlots: (state, action) => {
       state.newSlots = action.payload.newSlots;
@@ -28,5 +36,6 @@ const scheduleSlice = createSlice({
   },
 });
 
-export const { addNewSlot, deleteSlot, setSlots } = scheduleSlice.actions;
+export const { addNewSlot, removeActiveSlote, setSlots } =
+  scheduleSlice.actions;
 export default scheduleSlice.reducer;
