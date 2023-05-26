@@ -23,6 +23,7 @@ function Scheduled() {
   const [selected, setSelected] = React.useState("");
   const [dateSelected, setDateSelected] = React.useState();
   const [datos, setdatos] = useState([]);
+  const [isCalendarBlocker, setIsCalendarBlocker] = useState(false); // estado para bloquear el calendario
   const bottomSheetModalRef = useRef(null);
   const { newSlots, removeSlots } = useSelector((state) => state.schedule);
   const dispatch = useDispatch();
@@ -38,6 +39,7 @@ function Scheduled() {
   }, []);
 
   const handleClosePress = useCallback(() => {
+    setIsCalendarBlocker(false);
     bottomSheetModalRef.current?.close();
   }, []);
 
@@ -100,10 +102,14 @@ function Scheduled() {
       <BottomSheetModalProvider>
         <Calendar
           onDayPress={(day) => {
-            setSelected(day.dateString);
-            handlePresentModalPress();
-            setDateSelected(new Date(day.dateString));
+            if (!isCalendarBlocker) {
+              setSelected(day.dateString);
+              handlePresentModalPress();
+              setDateSelected(new Date(day.dateString));
+              setIsCalendarBlocker(true);
+            }
           }}
+          disabledByDefault={isCalendarBlocker}
           markedDates={{
             [selected]: {
               selected: true,
