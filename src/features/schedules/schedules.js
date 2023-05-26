@@ -10,7 +10,13 @@ const scheduleSlice = createSlice({
   initialState,
   reducers: {
     addNewSlot: (state, action) => {
+      if (state.newSlots.length > 0) {
+        state.newSlots = state.newSlots.filter(
+          (item) => item !== action.payload
+        );
+      }
       state.newSlots = [...state.newSlots, action.payload];
+      console.log(state.newSlots);
     },
     removeActiveSlote: (state, action) => {
       state.removeSlots = [...state.removeSlots, action.payload];
@@ -23,4 +29,4 @@ const scheduleSlice = createSlice({
 });
 
 export const { addNewSlot, deleteSlot, setSlots } = scheduleSlice.actions;
-export default authSlice.reducer;
+export default scheduleSlice.reducer;

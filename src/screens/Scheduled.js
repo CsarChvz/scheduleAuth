@@ -1,21 +1,29 @@
-import React, { useCallback, useMemo, useRef } from "react";
-import { View, Text, StyleSheet, Button } from "react-native";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { View, Text, StyleSheet, Button, TouchableOpacity } from "react-native";
 import { globalStyles } from "../styles/globalStyles";
 import { useNavigation } from "@react-navigation/native";
 import { Calendar, LocaleConfig } from "react-native-calendars";
 import {
   BottomSheetModal,
   BottomSheetModalProvider,
-  BottomSheetFlatList,
   BottomSheetScrollView,
 } from "@gorhom/bottom-sheet";
-
+import { useDispatch, useSelector } from "react-redux";
+import { addNewSlot } from "../features/schedules/schedules";
 function Scheduled() {
   const navigation = useNavigation();
   const [selected, setSelected] = React.useState("");
   const [dateSelected, setDateSelected] = React.useState();
+  const [datos, setdatos] = useState([]);
   const bottomSheetModalRef = useRef(null);
-
+  const { newSlots } = useSelector((state) => state.schedule);
+  const dispatch = useDispatch();
   // variables
   const snapPoints = useMemo(() => ["25%", "75%"], []);
 
@@ -31,21 +39,60 @@ function Scheduled() {
     bottomSheetModalRef.current?.close();
   }, []);
 
+  useEffect(() => {
+    setdatos(newSlots);
+  }, [newSlots]);
+
   const data = useMemo(
     () =>
       Array(48)
         .fill(0)
-        .map((_, index) => `index-${index}`),
-    []
+        .map((_, index) => {
+          const hour = Math.floor(index / 2)
+            .toString()
+            .padStart(2, "0"); // obtener las horas
+          const minute = index % 2 ? "30" : "00"; // obtener los minutos
+
+          const newDate = new Date(dateSelected);
+          newDate.setUTCHours(hour);
+          newDate.setUTCMinutes(minute);
+
+          const map = {
+            id: index + 1,
+            label: `${hour}:${minute}`,
+            timestamp: newDate.getTime(),
+          };
+          return map;
+        }),
+    [dateSelected] // agregar dateSelected como dependencia
   );
+
   const renderItem = useCallback(
     (item) => (
-      <View key={item} style={styles.itemContainer}>
-        <Text>{item}</Text>
-      </View>
+      <TouchableOpacity
+        key={item.id}
+        style={styles.itemContainer}
+        onPress={() => {
+          if (!newSlots.some((slot) => slot.timestamp === item.timestamp)) {
+            dispatch(addNewSlot(item));
+          } else {
+            console.log("El objeto ya existe en el array.");
+            // Aquí puedes manejar lo que ocurre si el objeto ya está en el array
+          }
+        }}
+      >
+        <Text>{item.label}</Text>
+        <Text>{item.timestamp}</Text>
+        <Text>
+          {newSlots.some((slot) => slot.timestamp === item.timestamp)
+            ? "true"
+            : "false"}
+        </Text>
+      </TouchableOpacity>
     ),
-    []
+    [newSlots] // agregar newSlots como dependencia
   );
+
   return (
     <View style={globalStyles.container}>
       <BottomSheetModalProvider>
@@ -72,11 +119,10 @@ function Scheduled() {
             onChange={handleSheetChanges}
           >
             <Button onPress={handleClosePress} title="Close" />
-            <Text>{JSON.stringify(dateSelected)}</Text>
             <BottomSheetScrollView
               contentContainerStyle={styles.contentContainer}
             >
-              {data.map(renderItem)}
+              {data?.map((item) => renderItem(item))}
             </BottomSheetScrollView>
           </BottomSheetModal>
         </View>
