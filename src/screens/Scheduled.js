@@ -15,7 +15,7 @@ import {
   BottomSheetScrollView,
 } from "@gorhom/bottom-sheet";
 import { useDispatch, useSelector } from "react-redux";
-import { addNewSlot, removeActiveSlote } from "../features/schedules/schedules";
+import { addNewSlot, removeActiveSlot } from "../features/schedules/schedules";
 
 import Ionicons from "@expo/vector-icons/Ionicons";
 function Scheduled() {
@@ -77,11 +77,9 @@ function Scheduled() {
         onPress={() => {
           if (!newSlots.some((slot) => slot.timestamp === item.timestamp)) {
             dispatch(addNewSlot(item));
-          } else if (
-            !removeSlots.some((slot) => slot.timestamp === item.timestamp)
-          ) {
+          } else {
             console.log("remove");
-            dispatch(removeActiveSlote(item));
+            dispatch(removeActiveSlot(item));
           }
         }}
       >
