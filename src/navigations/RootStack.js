@@ -9,18 +9,19 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebaseConfig";
+import { setSlots } from "../features/schedules/schedules";
 
 export default function RootNavigator() {
   const user = useSelector((state) => state.auth);
   const [token, setToken] = useState("");
   const dispatch = useDispatch();
-  const { setSlots } = useSelector((state) => state.schedule);
+  const schedule = useSelector((state) => state.schedule); // Obtener el estado de schedule
 
   useEffect(() => {
     const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
       if (user) {
         await AsyncStorage.setItem("@token", user.uid);
-        dispatch(restoreToken(user.uid));
+        dispatch(restoreToken({ uid: user.uid }));
       } else {
         console.log("Si");
       }
@@ -49,7 +50,13 @@ export default function RootNavigator() {
     }
   }
 
-  if (user.isLoading) {
+  // Función para cargar los slots
+  function loadSlots() {
+    const { uid } = user; // Obtener el UID del usuario actual desde el estado de autenticación
+    dispatch(setSlots({ uid: uid, newSlots: [], removeSlots: [] })); // Llamar a la acción setSlots con los parámetros necesarios
+  }
+
+  if (user.isLoading || schedule.isLoading) {
     console.log("Loading");
     return <Splash />;
   }

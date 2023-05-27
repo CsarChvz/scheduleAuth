@@ -49,21 +49,25 @@ const scheduleSlice = createSlice({
         collection(db, "slots"),
         where("userId", "==", action.payload.uid)
       );
-      getDocs(slotsQuery)
-        .then((snapshot) => {
-          const savedSlots = [];
+      const getSavedSlots = getDocs(slotsQuery);
 
-          snapshot.forEach((doc) => {
-            savedSlots.push(doc.data());
-          });
+      const setSavedSlots = getSavedSlots.then((snapshot) => {
+        const savedSlots = [];
 
-          // Actualizar el estado con los slots encontrados
-          state.newSlots = savedSlots;
-          state.removeSlots = action.payload.removeSlots;
-        })
-        .catch((error) => {
-          console.error("Error fetching saved slots:", error);
+        snapshot.forEach((doc) => {
+          savedSlots.push(doc.data());
         });
+
+        // Actualizar el estado con los slots encontrados
+        state.newSlots = savedSlots;
+        state.removeSlots = action.payload.removeSlots;
+      });
+
+      const handleErrors = (error) => {
+        console.error("Error fetching saved slots:", error);
+      };
+
+      Promise.all([getSavedSlots, setSavedSlots]).catch(handleErrors);
     },
     uploadChanges: async (state, action) => {
       // 1. Actualizar los slots nuevos el campo "alreadySaved" a true
