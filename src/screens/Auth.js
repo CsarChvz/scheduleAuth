@@ -17,14 +17,17 @@ export default function Auth() {
   const dispatch = useDispatch();
   const onLogin = async (email, password) => {
     if (email !== "" && password !== "") {
-      signInWithEmailAndPassword(auth, email, password).then(
-        async (userCredential) => {
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
           const user = userCredential.user;
-          await AsyncStorage.setItem("@token", user.uid);
           alert("Login success");
           dispatch(setAuthState("signedIn"));
-        }
-      );
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log(errorCode, errorMessage);
+        });
     }
   };
 
@@ -33,7 +36,6 @@ export default function Auth() {
       createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           const user = userCredential.user;
-          console.log(user);
           alert("Sign up success");
           dispatch(setAuthState("signedIn"));
         })

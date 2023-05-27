@@ -65,6 +65,7 @@ function Scheduled() {
             id: index + 1,
             label: `${hour}:${minute}`,
             timestamp: newDate.getTime(),
+            alreadySaved: false,
           };
           return map;
         }),
@@ -120,6 +121,7 @@ function Scheduled() {
         />
         <View style={styles.container}>
           <BottomSheetModal
+            onDismiss={handleClosePress}
             enableDismissOnClose={true}
             ref={bottomSheetModalRef}
             index={1}

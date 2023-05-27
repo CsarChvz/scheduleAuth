@@ -14,14 +14,6 @@ function Login({ onLogin, setEmail, setPassword }) {
   const [token, setToken] = useState("");
   const dispatch = useDispatch();
 
-  async function save(value) {
-    try {
-      dispatch(signIn(value));
-      await AsyncStorage.setItem("@token", value);
-    } catch (error) {
-      console.log(error);
-    }
-  }
   return (
     <View style={globalStyles.container}>
       <Text style={globalStyles.titleText}>Login</Text>
@@ -46,7 +38,9 @@ function Login({ onLogin, setEmail, setPassword }) {
         label="Login"
         onPress={() => {
           // onLogin();
-          save("sdasdasd");
+          onLogin();
+
+          // save("sdasdasd");
         }}
       />
       <MyButton

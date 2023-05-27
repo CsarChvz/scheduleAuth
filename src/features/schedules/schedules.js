@@ -1,7 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
-
+import { db } from "../../firebaseConfig";
 const initialState = {
-  newSlots: [],
+  newSlots: [
+    { alreadySaved: true, id: 5, label: "02:00", timestamp: 1684202400000 },
+    { alreadySaved: true, id: 1, label: "00:00", timestamp: 1684195200000 },
+    { alreadySaved: true, id: 1, label: "00:00", timestamp: 1685318400000 },
+    { alreadySaved: true, id: 1, label: "00:00", timestamp: 1685491200000 },
+    { alreadySaved: true, id: 2, label: "00:30", timestamp: 1685493000000 },
+  ],
   removeSlots: [],
 };
 
@@ -30,6 +36,11 @@ const scheduleSlice = createSlice({
     setSlots: (state, action) => {
       state.newSlots = action.payload.newSlots;
       state.removeSlots = action.payload.removeSlots;
+    },
+
+    uploadChanges: (state, action) => {
+      // En este punto lo que se tiene que realizar es un update de los slots que se encuentran en el array de newSlots y un delete de los slots que se encuentran en el array de removeSlots
+      // Para realizar el update se tiene que hacer un update de cada uno de los slots que se encuentran en el array de newSlots
     },
   },
 });

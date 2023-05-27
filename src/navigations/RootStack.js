@@ -18,6 +18,7 @@ export default function RootNavigator() {
   useEffect(() => {
     const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
       if (user) {
+        await AsyncStorage.setItem("@token", user.uid);
         dispatch(restoreToken(user.uid));
       } else {
         console.log("Si");
