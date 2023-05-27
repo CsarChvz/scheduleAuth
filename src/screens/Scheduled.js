@@ -42,7 +42,6 @@ function Scheduled() {
     setIsCalendarBlocker(false);
     bottomSheetModalRef.current?.close();
   }, []);
-
   useEffect(() => {
     setdatos(newSlots);
   }, [newSlots]);
@@ -78,7 +77,7 @@ function Scheduled() {
         key={item.id}
         style={styles.itemContainer}
         onPress={() => {
-          if (!newSlots.some((slot) => slot.timestamp === item.timestamp)) {
+          if (!newSlots?.some((slot) => slot.timestamp === item.timestamp)) {
             dispatch(addNewSlot(item));
           } else {
             console.log("remove");
@@ -89,7 +88,7 @@ function Scheduled() {
         <Text>{item.label}</Text>
         <Text>{item.timestamp}</Text>
         <Text>
-          {newSlots.some((slot) => slot.timestamp === item.timestamp) ? (
+          {newSlots?.some((slot) => slot.timestamp === item.timestamp) ? (
             <Ionicons name="md-checkmark-circle" size={32} color="green" />
           ) : null}
         </Text>

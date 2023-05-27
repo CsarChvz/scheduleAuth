@@ -2,8 +2,8 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import StackHome from "./Home";
 import { View, Text, TouchableOpacity } from "react-native";
 import Profile from "../screens/Profile";
-import { useSelector } from "react-redux";
-
+import { useDispatch, useSelector } from "react-redux";
+import { uploadChanges } from "../features/schedules/schedules";
 const Drawer = createDrawerNavigator();
 
 const Logout = () => {
@@ -21,7 +21,10 @@ const Logout = () => {
 };
 
 function DrawerStack() {
+  const { userToken } = useSelector((state) => state.auth);
+
   const { newSlots, removeSlots } = useSelector((state) => state.schedule);
+  const dispatch = useDispatch();
 
   return (
     <Drawer.Navigator
@@ -36,11 +39,20 @@ function DrawerStack() {
 
         headerRight: () => {
           if (
-            (newSlots.length > 0 ) &&
-            newSlots.some((slot) => slot.alreadySaved === false) || removeSlots.length > 0
+            (newSlots?.length > 0 &&
+              newSlots?.some((slot) => slot.alreadySaved === false)) ||
+            removeSlots?.length > 0
           ) {
             return (
-              <TouchableOpacity onPress={() => console.log("Guaradr")}>
+              <TouchableOpacity
+                onPress={() =>
+                  dispatch(
+                    uploadChanges({
+                      uid: userToken,
+                    })
+                  )
+                }
+              >
                 <Text>Guardar</Text>
               </TouchableOpacity>
             );

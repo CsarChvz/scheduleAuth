@@ -14,6 +14,7 @@ export default function RootNavigator() {
   const user = useSelector((state) => state.auth);
   const [token, setToken] = useState("");
   const dispatch = useDispatch();
+  const { setSlots } = useSelector((state) => state.schedule);
 
   useEffect(() => {
     const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
@@ -39,6 +40,7 @@ export default function RootNavigator() {
       if (value !== null) {
         console.log("Data stored", value);
         dispatch(restoreToken(value));
+        dispatch(setSlots(user.uid));
       } else {
         dispatch(restoreToken(null));
       }
