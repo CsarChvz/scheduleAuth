@@ -25,7 +25,9 @@ function Scheduled() {
   const [datos, setdatos] = useState([]);
   const [isCalendarBlocker, setIsCalendarBlocker] = useState(false); // estado para bloquear el calendario
   const bottomSheetModalRef = useRef(null);
-  const { newSlots, removeSlots } = useSelector((state) => state.schedule);
+  const { newSlots, removeSlots, setSlots } = useSelector(
+    (state) => state.schedule
+  );
   const dispatch = useDispatch();
   // variables
   const snapPoints = useMemo(() => ["25%", "75%"], []);

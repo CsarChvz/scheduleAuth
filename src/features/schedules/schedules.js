@@ -1,6 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
-
-import { deleteDoc, getDoc } from "firebase/firestore";
+import {
+  deleteDoc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  doc,
+  collection,
+  where,
+  query,
+} from "firebase/firestore";
 import { db } from "../../firebaseConfig";
 
 const initialState = {
@@ -34,25 +42,56 @@ const scheduleSlice = createSlice({
       console.log("REMOVESLOTS", state.removeSlots);
     },
     setSlots: (state, action) => {
-      state.newSlots = action.payload.newSlots;
-      state.removeSlots = action.payload.removeSlots;
-    },
+      // 1. Buscar los slots que ya están guardados en la base de datos del usuario con el UID en action.payload.uid
+      console.log("action.payload.uid", action.payload.uid);
 
-    uploadChanges: (state, action) => {
-      // 1. Actualizar los slots nuevo el campo de active a true
+      const slotsQuery = query(
+        collection(db, "slots"),
+        where("userId", "==", action.payload.uid)
+      );
+      getDocs(slotsQuery)
+        .then((snapshot) => {
+          const savedSlots = [];
+
+          snapshot.forEach((doc) => {
+            savedSlots.push(doc.data());
+          });
+
+          // Actualizar el estado con los slots encontrados
+          state.newSlots = savedSlots;
+          state.removeSlots = action.payload.removeSlots;
+        })
+        .catch((error) => {
+          console.error("Error fetching saved slots:", error);
+        });
+    },
+    uploadChanges: async (state, action) => {
+      // 1. Actualizar los slots nuevos el campo "alreadySaved" a true
       state.newSlots = state.newSlots.map((slot) => {
         return { ...slot, alreadySaved: true, userId: action.payload.uid };
       });
 
-      // Con estos se tiene que checar si ya existen en la base de datos, si existen entonces se tiene que actualizar, si no existen entonces se tiene que crear
-      // @TODO
+      // 2. Subir o actualizar los slots nuevos en la base de datos
+      await Promise.all(
+        state.newSlots.forEach(async (slot) => {
+          const slotRef = doc(db, "slots", slot.timestamp.toString());
+          const slotDoc = await getDoc(slotRef);
 
-      // Los anteriores se van a subir como un upsert, esto por si no existen, se van a crear, si existen entonces se van a actualizar
+          if (slotDoc.exists()) {
+            await updateDoc(slotRef, slot);
+          } else {
+            await setDoc(slotRef, slot);
+          }
+        })
+      );
 
-      // 2. Eliminar los slots que estan en removeSlots, esto se tiene que hacer con delete y buscando la referencia con el timestamp
-      // Con las operaciones de firebase se tiene que eliminar los slots que estan en removeSlots
-
-      // Se tiene que eliminar los slots, es importante que para eliminarlos se tiene que buscar la referencia con el timestamp
+      // 3. Eliminar los slots que están en removeSlots
+      await Promise.all(
+        state.removeSlots.map(async (slot) => {
+          const slotRef = doc(db, "slots", slot.timestamp.toString());
+          await deleteDoc(slotRef);
+        })
+      );
     },
   },
 });

@@ -40,7 +40,6 @@ export default function RootNavigator() {
       if (value !== null) {
         console.log("Data stored", value);
         dispatch(restoreToken(value));
-        dispatch(setSlots(user.uid));
       } else {
         dispatch(restoreToken(null));
       }
